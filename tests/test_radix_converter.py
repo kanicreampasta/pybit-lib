@@ -1,5 +1,5 @@
 import pytest
-from lib.radix_convert import RadixConvert
+from pybit.radix_convert import RadixConvert
 
 
 def test_dec_to_bin():
