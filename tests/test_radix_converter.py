@@ -15,3 +15,7 @@ def test_dec_to_hex():
     assert RadixConvert.dec_to_hex(0) == '0x0'
     assert RadixConvert.dec_to_hex(10) == '0xa'
     assert RadixConvert.dec_to_hex(100) == '0x64'
+    assert RadixConvert.dec_to_hex(100,4) == '0x0064'
+    assert RadixConvert.dec_to_hex(-100,2) == '0x9c'
+    assert RadixConvert.dec_to_hex(-100,4) == '0xff9c'
+    assert RadixConvert.dec_to_hex(-100,8) == '0xffffff9c'
