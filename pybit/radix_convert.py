@@ -1,3 +1,4 @@
+import collections
 from pybit.bits import Bits, BitsOperationError
 
 
@@ -12,11 +13,14 @@ class RadixConvert:
         :return: (Bits) Binary number
         """
         if value >= 0:
-            binary = Bits([int(x) for x in list('{0:#0{1}b}'.format(value, size + 2))[2:]])
+            binary = [int(x) for x in list('{0:#0{1}b}'.format(value, size + 2))[2:]]
         else:
             # Calc 2s compliment and mask bits for designated digits
-            binary = Bits([int(x) for x in bin(((-value ^ (2 ** 32 - 1)) + 0b1) & 2 ** size - 1)[2:]])
-        return binary
+            binary = [int(x) for x in bin(((-value ^ (2 ** 32 - 1)) + 0b1) & 2 ** size - 1)[2:]]
+        if size != 0:
+            binary = collections.deque(binary, size)
+
+        return Bits(binary)
 
     @staticmethod
     def dec_to_hex(value: int, digits: int = 0) -> str:
