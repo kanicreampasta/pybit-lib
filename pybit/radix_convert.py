@@ -9,7 +9,7 @@ class RadixConvert:
         """
         Convert decimal number to binary.
         :param value: (int) Decimal number.
-        :param size: (int) [Optional] Number of digits.
+        :param size: (int) [Optional] Number of BINARY digits.
         :return: (Bits) Binary number
         """
         if value >= 0:
@@ -23,12 +23,25 @@ class RadixConvert:
         return Bits(binary)
 
     @staticmethod
+    def hex_to_bin(value: int, size: int = 0) -> Bits:
+        """
+        Convert hexadecimal number to binary.
+        :param value: (int) Decimal number.
+        :param size: (int) [Optional] Number of BINARY digits.
+        :return: (Bits) Binary number
+        """
+        if size == 0:
+            size = len(list(hex(value))[2:]) * 4
+        binary = [int(x) for x in list('{0:#0{1}b}'.format(value, size + 2))[2:]]
+        return Bits(binary)
+
+    @staticmethod
     def dec_to_hex(value: int, digits: int = 0) -> str:
         """
         Convert decimal number to hexadecimal number.
         TODO: allow negative decimal
         :param value: (int) Decimal number.
-        :param digits: (int) Number of digits.
+        :param digits: (int) Number of HEX digits.
         :return: (str) Hexadecimal number
         """
         hexadecimal = ''

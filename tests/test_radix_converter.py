@@ -16,6 +16,17 @@ def test_dec_to_bin():
     assert RadixConvert.dec_to_bin(-100, 8) == Bits([1, 0, 0, 1, 1, 1, 0, 0])
 
 
+def test_hex_to_bin():
+    assert RadixConvert.hex_to_bin(0x0) == Bits([0, 0, 0, 0])
+    assert RadixConvert.hex_to_bin(0xa) == Bits([1, 0, 1, 0])
+    assert RadixConvert.hex_to_bin(0x48) == Bits([0, 1, 0, 0, 1, 0, 0, 0])
+    assert RadixConvert.hex_to_bin(0x100) == Bits([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0])
+    assert RadixConvert.hex_to_bin(0xffff) == Bits([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+    assert RadixConvert.hex_to_bin(0x0a, 6) == Bits([0, 0, 1, 0, 1, 0])
+    assert RadixConvert.hex_to_bin(0xa, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
+    assert RadixConvert.hex_to_bin(0x0a, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
+
+
 def test_dec_to_hex():
     assert RadixConvert.dec_to_hex(0) == '0x0'
     assert RadixConvert.dec_to_hex(10) == '0xa'
