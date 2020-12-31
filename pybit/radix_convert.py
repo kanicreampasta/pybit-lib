@@ -1,19 +1,21 @@
+from pybit.bits import Bits, BitsOperationError
+
+
 class RadixConvert:
 
     @staticmethod
-    def dec_to_bin(value: int, digits: int = 0) -> str:
+    def dec_to_bin(value: int, size: int = 0) -> Bits:
         """
         Convert decimal number to binary.
         :param value: (int) Decimal number.
-        :param digits: (int) Number of digits.
-        :return: (str) Binary number
+        :param size: (int) [Optional] Number of digits.
+        :return: (Bits) Binary number
         """
-        binary = ''
         if value >= 0:
-            binary = '{0:#0{1}b}'.format(value, digits + 2)
+            binary = Bits([int(x) for x in list('{0:#0{1}b}'.format(value, size + 2))[2:]])
         else:
             # Calc 2s compliment and mask bits for designated digits
-            binary = bin(((-value ^ (2 ** 32 - 1)) + 0b1) & 2 ** digits - 1)
+            binary = Bits([int(x) for x in bin(((-value ^ (2 ** 32 - 1)) + 0b1) & 2 ** size - 1)[2:]])
         return binary
 
     @staticmethod
