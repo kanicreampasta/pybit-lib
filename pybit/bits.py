@@ -75,7 +75,7 @@ class Bits:
         if t == 'l' or t == 'logic':
             return Bits([0 for _ in range(min(n, size))] + self.bits[:max(size - n, 0)])
         elif t == 'a' or t == 'arithmetic':
-            msb = self.bits[size-1]
+            msb = self.bits[0]
             return Bits([msb for _ in range(min(n, size))] + self.bits[:max(size - n, 0)])
         else:
             raise TypeError('shift type must be logical or arithmetic')
@@ -87,7 +87,7 @@ class Bits:
         if t == 'l' or t == 'logic':
             return Bits(lst[n:])
         elif t == 'a' or t == 'arithmetic':
-            msb = self.bits[size - 1]
-            return Bits([msb]+lst[n+1:])
+            msb = self.bits[0]
+            return Bits([msb] + lst[n + 1:])
         else:
             raise TypeError('shift type must be logical or arithmetic')

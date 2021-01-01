@@ -108,7 +108,7 @@ def test_bits_left_logical_shift():
 
 def test_bits_right_arithmetic_shift():
     bits = Bits([1, 1, 0, 1])
-    bits2 = Bits([1, 0, 1, 1, 0, 1])
+    bits2 = Bits([1, 0, 1, 1, 0, 0])
     assert bits >> ('a', 0) == Bits([1, 1, 0, 1])
     assert bits >> ('a', 1) == Bits([1, 1, 1, 0])
     assert bits >> ('a', 2) == Bits([1, 1, 1, 1])
@@ -120,14 +120,14 @@ def test_bits_right_arithmetic_shift():
 
 def test_bits_left_arithmetic_shift():
     bits = Bits([1, 1, 0, 1])
-    bits2 = Bits([1, 0, 1, 1, 0, 1])
+    bits2 = Bits([1, 0, 1, 1, 0, 0])
     assert bits << ('a', 0) == Bits([1, 1, 0, 1])
     assert bits << ('a', 1) == Bits([1, 0, 1, 0])
     assert bits << ('a', 2) == Bits([1, 1, 0, 0])
     assert bits << ('a', 3) == Bits([1, 0, 0, 0])
     assert bits << ('a', 4) == Bits([1, 0, 0, 0])
     assert bits << ('a', 5) == Bits([1, 0, 0, 0])
-    assert bits2 << ('a', 1) == Bits([1, 1, 1, 0, 1, 0])
-    assert bits2 << ('a', 2) == Bits([1, 1, 0, 1, 0, 0])
-    assert bits2 << ('a', 3) == Bits([1, 0, 1, 0, 0, 0])
-    assert Bits([1, 1, 1, 0, 1, 1, 0, 1]) << ('a', 2) == Bits([1, 0, 1, 1, 0, 1, 0, 0])
+    assert bits2 << ('a', 1) == Bits([1, 1, 1, 0, 0, 0])
+    assert bits2 << ('a', 2) == Bits([1, 1, 0, 0, 0, 0])
+    assert bits2 << ('a', 3) == Bits([1, 0, 0, 0, 0, 0])
+    assert Bits([1, 1, 1, 0, 1, 1, 0, 0]) << ('a', 2) == Bits([1, 0, 1, 1, 0, 0, 0, 0])
