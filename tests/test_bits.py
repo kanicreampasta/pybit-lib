@@ -172,3 +172,39 @@ class TestExtension:
         assert self.bits1.sign_extend(size=3) == Bits([1, 0, 1])
         assert self.bits2.sign_extend(size=3) == Bits([1, 0, 1])
         self._check_modify()
+
+
+class TestToBits:
+
+    def test_from_dec_positive(self):
+        assert Bits.from_dec(0) == Bits([0])
+        assert Bits.from_dec(0,1) == Bits([0])
+        assert Bits.from_dec(1,1) == Bits([1])
+        assert Bits.from_dec(10) == Bits([1, 0, 1, 0])
+        assert Bits.from_dec(10, 1) == Bits([0])
+        assert Bits.from_dec(10, 2) == Bits([1, 0])
+        assert Bits.from_dec(10, 3) == Bits([0, 1, 0])
+        assert Bits.from_dec(10, 10) == Bits([0, 0, 0, 0, 0, 0, 1, 0, 1, 0])
+        assert Bits.from_dec(100) == Bits([1, 1, 0, 0, 1, 0, 0])
+
+    def test_from_dec_negative(self):
+        assert Bits.from_dec(-1) == Bits([1])
+        assert Bits.from_dec(-1, 1) == Bits([1])
+        assert Bits.from_dec(-1, 5) == Bits([1, 1, 1, 1, 1])
+        assert Bits.from_dec(-10) == Bits([1, 0, 1, 1, 0])
+        assert Bits.from_dec(-10, 5) == Bits([1, 0, 1, 1, 0])
+        assert Bits.from_dec(-10, 10) == Bits([1, 1, 1, 1, 1, 1, 0, 1, 1, 0])
+        assert Bits.from_dec(-100, 8) == Bits([1, 0, 0, 1, 1, 1, 0, 0])
+        assert Bits.from_dec(-255) == Bits([1, 0, 0, 0, 0, 0, 0, 0, 1])
+
+    def test_from_hex(self):
+        assert Bits.from_hex(0x0) == Bits([0, 0, 0, 0])
+        assert Bits.from_hex(0x0, 1) == Bits([0])
+        assert Bits.from_hex(0x0, 2) == Bits([0, 0])
+        assert Bits.from_hex(0xa) == Bits([1, 0, 1, 0])
+        assert Bits.from_hex(0x48) == Bits([0, 1, 0, 0, 1, 0, 0, 0])
+        assert Bits.from_hex(0x100) == Bits([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0])
+        assert Bits.from_hex(0xffff) == Bits([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+        assert Bits.from_hex(0x0a, 6) == Bits([0, 0, 1, 0, 1, 0])
+        assert Bits.from_hex(0xa, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
+        assert Bits.from_hex(0x0a, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])

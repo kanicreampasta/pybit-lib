@@ -1,5 +1,5 @@
 from typing import Optional, List, Tuple
-
+import collections
 
 class BitsError(Exception):
     def __init__(self, msg: str) -> None:
@@ -106,3 +106,41 @@ class Bits:
         for i in range(min(size, current_size)):
             bits_data[size-1-i] = self.bits[current_size-1-i]
         return Bits(bits_data)
+
+    @staticmethod
+    def from_dec(value: int, size: int = None) -> 'Bits':
+        """
+        Convert decimal number to binary.
+        :param value: (int) Decimal number.
+        :param size: (int) [Optional] Number of BINARY digits.
+        :return: (Bits) Binary number
+        """
+        if value >= 0:
+            binary = [int(x) for x in list('{0:#0{1}b}'.format(value, 32 + 2))[2:]]
+            if size is None:
+                size = 1  # for 0
+                for i, b in enumerate(binary):
+                    if b == 1: size = 32 - i; break
+        else:
+            # Calc 2s compliment and mask bits for designated digits
+            binary = [int(x) for x in bin(((-value ^ (2 ** 32 - 1)) + 0b1) & 2 ** 32 - 1)[2:]]
+            if size is None:
+                size = 1  # for -1
+                for i, b in enumerate(binary):
+                    if b == 0: size = 32 - i + 1; break
+
+        return Bits(binary[32 - size:])
+
+    @staticmethod
+    def from_hex(value: int, size: int = 0) -> 'Bits':
+        """
+        Convert hexadecimal number to binary.
+        :param value: (int) Decimal number.
+        :param size: (int) [Optional] Number of BINARY digits.
+        :return: (Bits) Binary number
+        """
+        if size == 0:
+            size = len(list(hex(value))[2:]) * 4
+        binary = [int(x) for x in list('{0:#0{1}b}'.format(value, size + 2))[2:]]
+
+        return Bits(binary)
