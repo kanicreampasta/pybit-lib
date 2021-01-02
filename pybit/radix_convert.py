@@ -1,5 +1,6 @@
 import collections
 from pybit.bits import Bits, BitsOperationError
+import struct
 
 
 class RadixConvert:
@@ -34,6 +35,15 @@ class RadixConvert:
             size = len(list(hex(value))[2:]) * 4
         binary = [int(x) for x in list('{0:#0{1}b}'.format(value, size + 2))[2:]]
         return Bits(binary)
+
+    @staticmethod
+    def float_to_bin(value: float) -> Bits:
+        """
+        Convert 32-bits float to Bits.
+        :param value: (float) float to convert.
+        :return: (Bits) A Bits instance representing the given value.
+        """
+        return RadixConvert.hex_to_bin(struct.unpack('>I', struct.pack('>f', value))[0], size=32)
 
     @staticmethod
     def dec_to_hex(value: int, digits: int = 0) -> str:
