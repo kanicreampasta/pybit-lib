@@ -87,3 +87,47 @@ def test_bits_and_different_len():
     bits2 = Bits([1, 0, 0, 1, 0])
     with pytest.raises(BitsOperationError):
         bits1 ^ bits2
+
+def test_bits_right_logical_shift():
+    bits = Bits([1, 1, 0, 1])
+    assert bits >> ('l', 0) == Bits([1, 1, 0, 1])
+    assert bits >> ('l', 1) == Bits([0, 1, 1, 0])
+    assert bits >> ('l', 2) == Bits([0, 0, 1, 1])
+    assert bits >> ('l', 3) == Bits([0, 0, 0, 1])
+    assert bits >> ('l', 4) == Bits([0, 0, 0, 0])
+    assert bits >> ('l', 5) == Bits([0, 0, 0, 0])
+
+def test_bits_left_logical_shift():
+    bits = Bits([1, 1, 0, 1])
+    assert bits << ('l', 0) == Bits([1, 1, 0, 1])
+    assert bits << ('l', 1) == Bits([1, 0, 1, 0])
+    assert bits << ('l', 2) == Bits([0, 1, 0, 0])
+    assert bits << ('l', 3) == Bits([1, 0, 0, 0])
+    assert bits << ('l', 4) == Bits([0, 0, 0, 0])
+    assert bits << ('l', 5) == Bits([0, 0, 0, 0])
+
+def test_bits_right_arithmetic_shift():
+    bits = Bits([1, 1, 0, 1])
+    bits2 = Bits([1, 0, 1, 1, 0, 0])
+    assert bits >> ('a', 0) == Bits([1, 1, 0, 1])
+    assert bits >> ('a', 1) == Bits([1, 1, 1, 0])
+    assert bits >> ('a', 2) == Bits([1, 1, 1, 1])
+    assert bits >> ('a', 3) == Bits([1, 1, 1, 1])
+    assert bits >> ('a', 4) == Bits([1, 1, 1, 1])
+    assert bits2 >> ('a', 1) == Bits([1, 1, 0, 1, 1, 0])
+    assert bits2 >> ('a', 2) == Bits([1, 1, 1, 0, 1, 1])
+    assert bits2 >> ('a', 3) == Bits([1, 1, 1, 1, 0, 1])
+
+def test_bits_left_arithmetic_shift():
+    bits = Bits([1, 1, 0, 1])
+    bits2 = Bits([1, 0, 1, 1, 0, 0])
+    assert bits << ('a', 0) == Bits([1, 1, 0, 1])
+    assert bits << ('a', 1) == Bits([1, 0, 1, 0])
+    assert bits << ('a', 2) == Bits([1, 1, 0, 0])
+    assert bits << ('a', 3) == Bits([1, 0, 0, 0])
+    assert bits << ('a', 4) == Bits([1, 0, 0, 0])
+    assert bits << ('a', 5) == Bits([1, 0, 0, 0])
+    assert bits2 << ('a', 1) == Bits([1, 1, 1, 0, 0, 0])
+    assert bits2 << ('a', 2) == Bits([1, 1, 0, 0, 0, 0])
+    assert bits2 << ('a', 3) == Bits([1, 0, 0, 0, 0, 0])
+    assert Bits([1, 1, 1, 0, 1, 1, 0, 0]) << ('a', 2) == Bits([1, 0, 1, 1, 0, 0, 0, 0])

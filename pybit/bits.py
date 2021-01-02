@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 
 class BitsError(Exception):
@@ -25,29 +25,29 @@ class Bits:
                 self.bits = [0 for x in range(size)]
             else:
                 raise BitsConstructError('size must be specified')
-    
+
     def __getitem__(self, key: int) -> int:
         return self.bits[key]
-    
+
     def __setitem__(self, key: int, val: int) -> int:
         self.bits[key] = val
-    
+
     def __len__(self) -> int:
         return len(self.bits)
 
     def _check_len_eq(self, o: 'Bits') -> None:
         if len(self) != len(o):
             raise BitsOperationError('Bits length does not match')
-    
+
     def __eq__(self, o) -> bool:
         if isinstance(o, Bits):
             self._check_len_eq(o)
             return all([a == b for a, b in zip(self.bits, o.bits)])
         return False
-    
+
     def __ne__(self, o) -> bool:
         return not self.__eq__(o)
-    
+
     def __and__(self, o: 'Bits') -> 'Bits':
         if isinstance(o, Bits):
             self._check_len_eq(o)
@@ -68,3 +68,26 @@ class Bits:
 
     def __invert__(self) -> 'Bits':
         return Bits([1 - x for x in self.bits])
+
+    def __rshift__(self, arg: Tuple[str, int]) -> 'Bits':
+        t, n = arg
+        size = len(self.bits)
+        if t == 'l' or t == 'logic':
+            return Bits([0 for _ in range(min(n, size))] + self.bits[:max(size - n, 0)])
+        elif t == 'a' or t == 'arithmetic':
+            msb = self.bits[0]
+            return Bits([msb for _ in range(min(n, size))] + self.bits[:max(size - n, 0)])
+        else:
+            raise TypeError('shift type must be logical or arithmetic')
+
+    def __lshift__(self, arg: Tuple[str, int]) -> 'Bits':
+        t, n = arg
+        size = len(self.bits)
+        lst = self.bits + [0 for _ in range(n)]
+        if t == 'l' or t == 'logic':
+            return Bits(lst[n:])
+        elif t == 'a' or t == 'arithmetic':
+            msb = self.bits[0]
+            return Bits([msb] + lst[n + 1:])
+        else:
+            raise TypeError('shift type must be logical or arithmetic')
