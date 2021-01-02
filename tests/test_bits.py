@@ -131,3 +131,44 @@ def test_bits_left_arithmetic_shift():
     assert bits2 << ('a', 2) == Bits([1, 1, 0, 0, 0, 0])
     assert bits2 << ('a', 3) == Bits([1, 0, 0, 0, 0, 0])
     assert Bits([1, 1, 1, 0, 1, 1, 0, 0]) << ('a', 2) == Bits([1, 0, 1, 1, 0, 0, 0, 0])
+
+class TestExtension:
+    def setup_method(self, method):
+        self.bits1 = Bits([0, 1, 0, 1])
+        self.bits2 = Bits([1, 1, 0, 1])
+        self.bits1_ref = Bits([0, 1, 0, 1])
+        self.bits2_ref = Bits([1, 1, 0, 1])
+    
+    def _check_modify(self):
+        assert self.bits1 == self.bits1_ref
+        assert self.bits2 == self.bits2_ref
+
+    def test_bits_zero_extension(self):
+        assert self.bits1.zero_extend(size=8) == Bits([0, 0, 0, 0, 0, 1, 0, 1])
+        assert self.bits2.zero_extend(size=8) == Bits([0, 0, 0, 0, 1, 1, 0, 1])
+        self._check_modify()
+
+    def test_bits_sign_extension(self):
+        assert self.bits1.sign_extend(size=8) == Bits([0, 0, 0, 0, 0, 1, 0, 1])
+        assert self.bits2.sign_extend(size=8) == Bits([1, 1, 1, 1, 1, 1, 0, 1])
+        self._check_modify()
+
+    def test_bits_zero_extension_same(self):
+        assert self.bits1.zero_extend(size=4) == Bits([0, 1, 0, 1])
+        assert self.bits2.zero_extend(size=4) == Bits([1, 1, 0, 1])
+        self._check_modify()
+    
+    def test_bits_sign_extension_same(self):
+        assert self.bits1.sign_extend(size=4) == Bits([0, 1, 0, 1])
+        assert self.bits2.sign_extend(size=4) == Bits([1, 1, 0, 1])
+        self._check_modify()
+    
+    def test_bits_zero_extension_shrink(self):
+        assert self.bits1.zero_extend(size=3) == Bits([1, 0, 1])
+        assert self.bits2.zero_extend(size=3) == Bits([1, 0, 1])
+        self._check_modify()
+    
+    def test_bits_sign_extension_shrink(self):
+        assert self.bits1.sign_extend(size=3) == Bits([1, 0, 1])
+        assert self.bits2.sign_extend(size=3) == Bits([1, 0, 1])
+        self._check_modify()

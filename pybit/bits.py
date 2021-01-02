@@ -91,3 +91,18 @@ class Bits:
             return Bits([msb] + lst[n + 1:])
         else:
             raise TypeError('shift type must be logical or arithmetic')
+    
+    def zero_extend(self, *, size: int) -> 'Bits':
+        bits_data = [0 for i in range(size)]
+        current_size = len(self)
+        for i in range(min(size, current_size)):
+            bits_data[size-1-i] = self.bits[current_size-1-i]
+        return Bits(bits_data)
+    
+    def sign_extend(self, *, size: int) -> 'Bits':
+        msb = self.bits[0]
+        bits_data = [msb for i in range(size)]
+        current_size = len(self)
+        for i in range(min(size, current_size)):
+            bits_data[size-1-i] = self.bits[current_size-1-i]
+        return Bits(bits_data)
