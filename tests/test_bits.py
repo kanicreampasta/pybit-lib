@@ -87,3 +87,124 @@ def test_bits_and_different_len():
     bits2 = Bits([1, 0, 0, 1, 0])
     with pytest.raises(BitsOperationError):
         bits1 ^ bits2
+
+def test_bits_right_logical_shift():
+    bits = Bits([1, 1, 0, 1])
+    assert bits >> ('l', 0) == Bits([1, 1, 0, 1])
+    assert bits >> ('l', 1) == Bits([0, 1, 1, 0])
+    assert bits >> ('l', 2) == Bits([0, 0, 1, 1])
+    assert bits >> ('l', 3) == Bits([0, 0, 0, 1])
+    assert bits >> ('l', 4) == Bits([0, 0, 0, 0])
+    assert bits >> ('l', 5) == Bits([0, 0, 0, 0])
+
+def test_bits_left_logical_shift():
+    bits = Bits([1, 1, 0, 1])
+    assert bits << ('l', 0) == Bits([1, 1, 0, 1])
+    assert bits << ('l', 1) == Bits([1, 0, 1, 0])
+    assert bits << ('l', 2) == Bits([0, 1, 0, 0])
+    assert bits << ('l', 3) == Bits([1, 0, 0, 0])
+    assert bits << ('l', 4) == Bits([0, 0, 0, 0])
+    assert bits << ('l', 5) == Bits([0, 0, 0, 0])
+
+def test_bits_right_arithmetic_shift():
+    bits = Bits([1, 1, 0, 1])
+    bits2 = Bits([1, 0, 1, 1, 0, 0])
+    assert bits >> ('a', 0) == Bits([1, 1, 0, 1])
+    assert bits >> ('a', 1) == Bits([1, 1, 1, 0])
+    assert bits >> ('a', 2) == Bits([1, 1, 1, 1])
+    assert bits >> ('a', 3) == Bits([1, 1, 1, 1])
+    assert bits >> ('a', 4) == Bits([1, 1, 1, 1])
+    assert bits2 >> ('a', 1) == Bits([1, 1, 0, 1, 1, 0])
+    assert bits2 >> ('a', 2) == Bits([1, 1, 1, 0, 1, 1])
+    assert bits2 >> ('a', 3) == Bits([1, 1, 1, 1, 0, 1])
+
+def test_bits_left_arithmetic_shift():
+    bits = Bits([1, 1, 0, 1])
+    bits2 = Bits([1, 0, 1, 1, 0, 0])
+    assert bits << ('a', 0) == Bits([1, 1, 0, 1])
+    assert bits << ('a', 1) == Bits([1, 0, 1, 0])
+    assert bits << ('a', 2) == Bits([1, 1, 0, 0])
+    assert bits << ('a', 3) == Bits([1, 0, 0, 0])
+    assert bits << ('a', 4) == Bits([1, 0, 0, 0])
+    assert bits << ('a', 5) == Bits([1, 0, 0, 0])
+    assert bits2 << ('a', 1) == Bits([1, 1, 1, 0, 0, 0])
+    assert bits2 << ('a', 2) == Bits([1, 1, 0, 0, 0, 0])
+    assert bits2 << ('a', 3) == Bits([1, 0, 0, 0, 0, 0])
+    assert Bits([1, 1, 1, 0, 1, 1, 0, 0]) << ('a', 2) == Bits([1, 0, 1, 1, 0, 0, 0, 0])
+
+class TestExtension:
+    def setup_method(self, method):
+        self.bits1 = Bits([0, 1, 0, 1])
+        self.bits2 = Bits([1, 1, 0, 1])
+        self.bits1_ref = Bits([0, 1, 0, 1])
+        self.bits2_ref = Bits([1, 1, 0, 1])
+    
+    def _check_modify(self):
+        assert self.bits1 == self.bits1_ref
+        assert self.bits2 == self.bits2_ref
+
+    def test_bits_zero_extension(self):
+        assert self.bits1.zero_extend(size=8) == Bits([0, 0, 0, 0, 0, 1, 0, 1])
+        assert self.bits2.zero_extend(size=8) == Bits([0, 0, 0, 0, 1, 1, 0, 1])
+        self._check_modify()
+
+    def test_bits_sign_extension(self):
+        assert self.bits1.sign_extend(size=8) == Bits([0, 0, 0, 0, 0, 1, 0, 1])
+        assert self.bits2.sign_extend(size=8) == Bits([1, 1, 1, 1, 1, 1, 0, 1])
+        self._check_modify()
+
+    def test_bits_zero_extension_same(self):
+        assert self.bits1.zero_extend(size=4) == Bits([0, 1, 0, 1])
+        assert self.bits2.zero_extend(size=4) == Bits([1, 1, 0, 1])
+        self._check_modify()
+    
+    def test_bits_sign_extension_same(self):
+        assert self.bits1.sign_extend(size=4) == Bits([0, 1, 0, 1])
+        assert self.bits2.sign_extend(size=4) == Bits([1, 1, 0, 1])
+        self._check_modify()
+    
+    def test_bits_zero_extension_shrink(self):
+        assert self.bits1.zero_extend(size=3) == Bits([1, 0, 1])
+        assert self.bits2.zero_extend(size=3) == Bits([1, 0, 1])
+        self._check_modify()
+    
+    def test_bits_sign_extension_shrink(self):
+        assert self.bits1.sign_extend(size=3) == Bits([1, 0, 1])
+        assert self.bits2.sign_extend(size=3) == Bits([1, 0, 1])
+        self._check_modify()
+
+
+class TestToBits:
+
+    def test_from_dec_positive(self):
+        assert Bits.from_dec(0) == Bits([0])
+        assert Bits.from_dec(0,1) == Bits([0])
+        assert Bits.from_dec(1,1) == Bits([1])
+        assert Bits.from_dec(10) == Bits([1, 0, 1, 0])
+        assert Bits.from_dec(10, 1) == Bits([0])
+        assert Bits.from_dec(10, 2) == Bits([1, 0])
+        assert Bits.from_dec(10, 3) == Bits([0, 1, 0])
+        assert Bits.from_dec(10, 10) == Bits([0, 0, 0, 0, 0, 0, 1, 0, 1, 0])
+        assert Bits.from_dec(100) == Bits([1, 1, 0, 0, 1, 0, 0])
+
+    def test_from_dec_negative(self):
+        assert Bits.from_dec(-1) == Bits([1])
+        assert Bits.from_dec(-1, 1) == Bits([1])
+        assert Bits.from_dec(-1, 5) == Bits([1, 1, 1, 1, 1])
+        assert Bits.from_dec(-10) == Bits([1, 0, 1, 1, 0])
+        assert Bits.from_dec(-10, 5) == Bits([1, 0, 1, 1, 0])
+        assert Bits.from_dec(-10, 10) == Bits([1, 1, 1, 1, 1, 1, 0, 1, 1, 0])
+        assert Bits.from_dec(-100, 8) == Bits([1, 0, 0, 1, 1, 1, 0, 0])
+        assert Bits.from_dec(-255) == Bits([1, 0, 0, 0, 0, 0, 0, 0, 1])
+
+    def test_from_hex(self):
+        assert Bits.from_hex(0x0) == Bits([0, 0, 0, 0])
+        assert Bits.from_hex(0x0, 1) == Bits([0])
+        assert Bits.from_hex(0x0, 2) == Bits([0, 0])
+        assert Bits.from_hex(0xa) == Bits([1, 0, 1, 0])
+        assert Bits.from_hex(0x48) == Bits([0, 1, 0, 0, 1, 0, 0, 0])
+        assert Bits.from_hex(0x100) == Bits([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0])
+        assert Bits.from_hex(0xffff) == Bits([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+        assert Bits.from_hex(0x0a, 6) == Bits([0, 0, 1, 0, 1, 0])
+        assert Bits.from_hex(0xa, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
+        assert Bits.from_hex(0x0a, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
