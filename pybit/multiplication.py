@@ -31,21 +31,27 @@ class Multiplication:
         B = B.sign_extend(size=size[1]*2)
         B = B << ('l', 1)
 
+        result = []
+
         for i in range(3):
             bit3 = ''.join(map(str, B[12 - 3 - 2 * i:12 - 2 * i]))
 
             if PPType[bit3] == "0":
-                pass
+                result.append(Bits.from_dec(0, 12))
             elif PPType[bit3] == "+1":
-                pass
+                result.append(A << ('l', 2*i))
             elif PPType[bit3] == "+2":
-                pass
+                result.append(A << ('l', 1) << ('l', 2*i))
             elif PPType[bit3] == "-1":
-                pass
+                invA = A.__invert__()
+                result.append(invA << ('l', 2*i))
             elif PPType[bit3] == "-2":
-                pass
+                invA = A.__invert__()
+                result.append(invA << ('l', 1) << ('l', 2*i))
             else:
                 raise TypeError("unintended bit3")
+        for i in result:
+            print(i[0:])
 
 
 
@@ -63,3 +69,7 @@ class Multiplication:
     def wallace_tree():
         pass
 
+
+
+# print(Multiplication.booth_secondary(Bits.from_dec(10, 6), Bits.from_dec(-1, 6)))
+Multiplication.booth_secondary(Bits.from_dec(0b010111, 6), Bits.from_dec(0b001011, 6))
