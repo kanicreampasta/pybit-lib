@@ -129,6 +129,19 @@ class Multiplication:
         return [P, G, CO, S]
 
     @staticmethod
+    def CSA(X: Bits, Y: Bits, Z: Bits, size: int):
+        Multiplication._check_len(X, Y, size=size)
+        Multiplication._check_len(Y, Z, size=size)
+        S, C = Multiplication._ini(q=2, size=size)
+
+        for i in range(size):
+            idx = size - (i + 1)
+            S[idx] = X[idx] ^ Y[idx] ^ Z[idx]
+            C[idx] = (X[idx] & Y[idx]) + (Y[idx] & Z[idx]) + (Z[idx] & X[idx])
+        C = C << ('l', 1)
+        return [S, C]
+
+    @staticmethod
     def RCA(A: Bits, B: Bits, CI0: int, size: int):
         Multiplication._check_len(A, B, size=size)
         S, CI, CO = Multiplication._ini(q=3, size=size)

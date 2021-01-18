@@ -1,5 +1,5 @@
 import pytest
-from pybit.bits import Bits, BitsOperationError
+from pybit.bits import Bits, BitsOperationError, BitsConstructError
 
 
 def test_zero_construct():
@@ -208,6 +208,22 @@ class TestToBits:
         assert Bits.from_hex(0x0a, 6) == Bits([0, 0, 1, 0, 1, 0])
         assert Bits.from_hex(0xa, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
         assert Bits.from_hex(0x0a, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
+    
+    def test_from_bin(self):
+        cases = [
+            ('1010', [1, 0, 1, 0]),
+            ('111111', [1,1,1,1,1,1]),
+            ('0100', [0,1,0,0]),
+            ('0', [0]),
+            ('00', [0,0])
+        ]
+        for q, a in cases:
+            assert Bits.from_bin(q) == Bits(a)
+            assert Bits.from_bin('0b' + q) == Bits(a)
+        with pytest.raises(BitsConstructError):
+            Bits.from_bin('0c100')
+        with pytest.raises(BitsConstructError):
+            Bits.from_bin('0123')
 
     def test_from_float(self):
         assert Bits.from_float(1.5) == Bits.from_hex(0x3fc00000, 32)
