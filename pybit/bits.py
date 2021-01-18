@@ -18,7 +18,7 @@ class BitsOperationError(BitsError):
 
 
 class Bits:
-    def __init__(self, bits: Optional[List[int]] = None, *, size: Optional[int] = None) -> None:
+    def __init__(self, bits: Optional[List[int]]=None, *, size: Optional[int]=None) -> None:
         if bits:
             self.bits = bits
         else:
@@ -114,7 +114,7 @@ class Bits:
         bits_data = [0 for i in range(size)]
         current_size = len(self)
         for i in range(min(size, current_size)):
-            bits_data[size - 1 - i] = self.bits[current_size - 1 - i]
+            bits_data[size-1-i] = self.bits[current_size-1-i]
         return Bits(bits_data)
 
     def sign_extend(self, *, size: int) -> 'Bits':
@@ -122,7 +122,7 @@ class Bits:
         bits_data = [msb for i in range(size)]
         current_size = len(self)
         for i in range(min(size, current_size)):
-            bits_data[size - 1 - i] = self.bits[current_size - 1 - i]
+            bits_data[size-1-i] = self.bits[current_size-1-i]
         return Bits(bits_data)
 
     @staticmethod
