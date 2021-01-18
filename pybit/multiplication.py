@@ -3,12 +3,12 @@ from pybit.bits import Bits
 
 class Multiplication:
     @staticmethod
-    def _check_len(A: Bits, B: Bits):
-        size = [len(A), len(B)]
-        if size[0] != size[1]:
+    def _check_len(A: Bits, B: Bits, size: int):
+        sizes = [len(A), len(B)]
+        if sizes[0] != sizes[1]:
             raise TypeError('A and B must be same length')
-        if size[0] != 6:
-            raise TypeError('Only supports 6 bits now')
+        if sizes[0] != size:
+            raise TypeError('Only supports {0} bits now'.format(size))
 
     @staticmethod
     def _extend(A: Bits, B: Bits):
@@ -19,6 +19,10 @@ class Multiplication:
         return A, B
 
     @staticmethod
+    def _ini(q: int, size: int):
+        return (Bits.from_dec(0, size) for _ in range(q))
+
+    @staticmethod
     def booth_secondary(A: Bits, B: Bits):
         PPType = {
             '000': ('', 0), '100': ('-', 2),
@@ -27,7 +31,7 @@ class Multiplication:
             '011': ('+', 2), '111': ('', 0)
         }
 
-        Multiplication._check_len(A, B)
+        Multiplication._check_len(A, B, size=6)
         A, B = Multiplication._extend(A, B)
         pp = []
 
@@ -67,7 +71,7 @@ class Multiplication:
             '0111': ('+', 4), '1111': ('', 0),
         }
 
-        Multiplication._check_len(A, B)
+        Multiplication._check_len(A, B, size=6)
         A, B = Multiplication._extend(A, B)
         pp = []
 
@@ -99,6 +103,30 @@ class Multiplication:
         pp.append(ans)
 
         return pp
+
+    @staticmethod
+    def CLA(A: Bits, B: Bits, CI0: int, size: int):
+        """
+        lsb: list(size-1)
+        msb: list(0)
+        return:(list) [P, G, CO, S](Bits)
+        """
+        Multiplication._check_len(A, B, size=size)
+        G, P, CI, CO, S = Multiplication._ini(q=5, size=size)
+        CI[size - 1] = CI0
+
+        for i in range(size):
+            idx = size - (i + 1)
+            G[idx] = A[idx] & B[idx]
+            P[idx] = A[idx] ^ B[idx]
+            CO[idx] = G[idx] + (P[idx] & CI[idx])
+            if i != size - 1:
+                CI[idx - 1] = CO[idx]
+            else:
+                continue
+            S[idx] = P[idx] ^ CI[idx]
+
+        return [P, G, CO, S]
 
     @staticmethod
     def partial_product():
