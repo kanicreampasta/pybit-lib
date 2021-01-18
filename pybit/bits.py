@@ -98,8 +98,8 @@ class Bits:
             # 1桁多めにとる
             mlen = max(len(self.bits), len(o.bits)) + 1
 
-            A = self.sign_extend(size=mlen)
-            B = o.sign_extend(size=mlen)
+            A = self.zero_extend(size=mlen)
+            B = o.zero_extend(size=mlen)
 
             while B != Bits.from_dec(0b0, size=mlen):
                 tmp = (A & B) << ('l', 1)
