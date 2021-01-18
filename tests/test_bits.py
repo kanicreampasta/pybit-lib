@@ -209,6 +209,12 @@ class TestToBits:
         assert Bits.from_hex(0xa, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
         assert Bits.from_hex(0x0a, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
 
+    def test_from_float(self):
+        assert Bits.from_float(1.5) == Bits.from_hex(0x3fc00000, 32)
+        assert Bits.from_float(-1.5) == Bits.from_hex(0xbfc00000, 32)
+        assert Bits.from_float(0.0) == Bits(size=32)
+        assert Bits.from_float(1.2) == Bits.from_hex(0x3f99999a, 32)
+
 
 class TestAdd:
     def test_no_carry(self):
