@@ -11,10 +11,6 @@ class Multiplication:
             raise TypeError('Only supports 6 bits now')
 
     @staticmethod
-    def _ini(q: int, size: int):
-        return (Bits.from_dec(0, size) for _ in range(q))
-
-    @staticmethod
     def _extend(A: Bits, B: Bits):
         # 符号拡張
         A = A.sign_extend(size=12)
@@ -103,19 +99,6 @@ class Multiplication:
         pp.append(ans)
 
         return pp
-
-    @staticmethod
-    def CSA(X: Bits, Y: Bits, Z: Bits, size: int):
-        # Multiplication._check_len(X, Y, size=size)
-        # Multiplication._check_len(Y, Z, size=size)
-        S, C = Multiplication._ini(q=2, size=size)
-
-        for i in range(size):
-            idx = size - (i + 1)
-            S[idx] = X[idx] ^ Y[idx] ^ Z[idx]
-            C[idx] = (X[idx] & Y[idx]) + (Y[idx] & Z[idx]) + (Z[idx] & X[idx])
-        C = C << ('l', 1)
-        return [S, C]
 
     @staticmethod
     def partial_product():
