@@ -137,7 +137,7 @@ class Multiplication:
         for i in range(size):
             idx = size - (i + 1)
             S[idx] = X[idx] ^ Y[idx] ^ Z[idx]
-            C[idx] = (X[idx] & Y[idx]) + (Y[idx] & Z[idx]) + (Z[idx] & X[idx])
+            C[idx] = ((X[idx] & Y[idx]) + (Y[idx] & Z[idx]) + (Z[idx] & X[idx])) % 2
         C = C << ('l', 1)
         return [S, C]
 
