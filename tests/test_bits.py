@@ -208,3 +208,41 @@ class TestToBits:
         assert Bits.from_hex(0x0a, 6) == Bits([0, 0, 1, 0, 1, 0])
         assert Bits.from_hex(0xa, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
         assert Bits.from_hex(0x0a, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
+
+
+class TestAdd:
+    def test_no_carry(self):
+        assert Bits([0, 0, 0]) + Bits([0, 0, 0]) == Bits([0, 0, 0])
+        assert Bits([0, 1, 0, 1]) + Bits([1, 0, 1, 0]) == Bits([1, 1, 1, 1])
+        assert Bits([1, 0, 1, 0]) + Bits([0, 1, 0, 1]) == Bits([1, 1, 1, 1])
+
+    def test_no_carry_extend(self):
+        assert Bits([0]) + Bits([0, 0, 0]) == Bits([0, 0, 0])
+        assert Bits([0, 0, 0]) + Bits([0]) == Bits([0, 0, 0])
+        assert Bits([0, 0, 0]) + Bits([1, 1]) == Bits([0, 1, 1])
+        assert Bits([1, 0, 0]) + Bits([0, 0, 0, 0]) == Bits([0, 1, 0, 0])
+
+    def test_has_carry(self):
+        assert Bits([0, 0, 0, 1]) + Bits([0, 0, 0, 1]) == Bits([0, 0, 1, 0])
+        assert Bits([0, 0, 1, 1]) + Bits([0, 0, 0, 1]) == Bits([0, 1, 0, 0])
+
+    def test_has_carry_overflow(self):
+        assert Bits([1]) + Bits([1]) == Bits([1, 0])
+        assert Bits([1, 1, 1, 1]) + Bits([0, 0, 0, 1]) == Bits([1, 0, 0, 0, 0])
+        assert Bits([0, 0, 0, 1]) + Bits([1, 1, 1, 1]) == Bits([1, 0, 0, 0, 0])
+        assert Bits([1, 0, 1, 1]) + Bits([1, 1, 0, 1]) == Bits([1, 1, 0, 0, 0])
+
+    def test_has_carry_extend(self):
+        assert Bits([1, 0, 1, 1]) + Bits([1]) == Bits([1, 1, 0, 0])
+        assert Bits([1]) + Bits([1, 0, 1, 1]) == Bits([1, 1, 0, 0])
+        assert Bits([1, 0, 1]) + Bits([1, 0, 0, 1]) == Bits([1, 1, 1, 0])
+
+    def test_has_carry_extend_overflow(self):
+        assert Bits([1, 1, 1, 1]) + Bits([1]) == Bits([1, 0, 0, 0, 0])
+        assert Bits([1]) + Bits([1, 1, 1, 1]) == Bits([1, 0, 0, 0, 0])
+
+    def test_multiple_addition(self):
+        assert Bits([0, 0]) + Bits([0, 0, 0]) + Bits([0, 0, 0, 0]) == Bits([0, 0, 0, 0])
+        assert Bits([0, 0]) + Bits([0, 0, 0]) + Bits([0, 0]) == Bits([0, 0, 0])
+        assert Bits([1, 0]) + Bits([1, 0, 0]) + Bits([0, 1, 1]) == Bits([1, 0, 0, 1])
+        assert Bits([1, 1, 1, 1]) + Bits([1, 1, 1, 1]) + Bits([1, 1, 1, 1]) == Bits([1, 0, 1, 1, 0, 1])
