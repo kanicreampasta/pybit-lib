@@ -42,10 +42,10 @@ class Multiplication:
             elif PPType[bit3] == "+2":
                 pp.append(A << ('l', 1) << ('l', 2 * i))
             elif PPType[bit3] == "-1":
-                invA = A.__invert__()
+                invA = A.__invert__() + Bits([1])
                 pp.append(invA << ('l', 2 * i))
             elif PPType[bit3] == "-2":
-                invA = A.__invert__()
+                invA = A.__invert__() + Bits([1])
                 pp.append(invA << ('l', 1) << ('l', 2 * i))
             else:
                 raise TypeError("unintended bit3")
