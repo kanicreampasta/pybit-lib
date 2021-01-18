@@ -129,6 +129,21 @@ class Multiplication:
         return [P, G, CO, S]
 
     @staticmethod
+    def RCA(A: Bits, B: Bits, CI0: int, size: int):
+        Multiplication._check_len(A, B, size=size)
+        S, CI, CO = Multiplication._ini(q=3, size=size)
+        CI[size-1] = CI0
+
+        for i in range(size):
+            idx = size - (i + 1)
+            S[idx] = A[idx] ^ B[idx] ^ CI[idx]
+            CO[idx] = ((A[idx] & B[idx]) + (B[idx] & CI[idx]) + (CI[idx] & A[idx])) % 2
+            if i != size - 1:
+                CI[idx - 1] = CO[idx]
+
+        return [S, CO]
+
+    @staticmethod
     def partial_product():
         pass
 
