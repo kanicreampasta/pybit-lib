@@ -26,9 +26,22 @@ def test_booth_secondary():
     ]
 
 
-
 def test_booth_tertiary():
-    pass
+    A1 = Bits.from_dec(0b101111, 6)
+    B1 = Bits.from_dec(0b011010, 6)
+    assert Multiplication.booth_tertiary(A1, B1) == [
+        Bits([1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0]),
+        Bits([1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0]),
+        Bits([1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0])
+    ]
+
+    A2 = Bits.from_dec(0b101111, 6)
+    B2 = Bits.from_dec(0b110010, 6)
+    assert Multiplication.booth_tertiary(A2, B2) == [
+        Bits([1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0]),
+        Bits([0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0]),
+        Bits([0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0])
+    ]
 
 
 def test_partial_product():
