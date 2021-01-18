@@ -11,6 +11,14 @@ class Multiplication:
             raise TypeError('Only supports 6 bits now')
 
     @staticmethod
+    def _extend(A: Bits, B: Bits):
+        # 符号拡張
+        A = A.sign_extend(size=12)
+        # Bのlsbに0を入れる
+        B = B.sign_extend(size=12) << ('l', 1)
+        return A, B
+
+    @staticmethod
     def booth_secondary(A: Bits, B: Bits):
         PPType = {
             '000': ('', 0), '100': ('-', 2),
@@ -20,12 +28,7 @@ class Multiplication:
         }
 
         Multiplication._check_len(A, B)
-
-        # 符号拡張
-        A = A.sign_extend(size=12)
-        # Bのlsbに0を入れる
-        B = B.sign_extend(size=12) << ('l', 1)
-
+        A, B = Multiplication._extend(A, B)
         pp = []
 
         for i in range(3):
@@ -65,16 +68,12 @@ class Multiplication:
         }
 
         Multiplication._check_len(A, B)
-
-        # 符号拡張
-        A = A.sign_extend(size=12)
-        # Bのlsbに0を入れる
-        B = B.sign_extend(size=12) << ('l', 1)
-
+        A, B = Multiplication._extend(A, B)
         pp = []
 
         for i in range(2):
             bit4 = ''.join(map(str, B[12 - 4 - 3 * i:12 - 3 * i]))
+            print(bit4)
 
             if PPType[bit4][0] == '-':
                 _A = A.__invert__() + Bits([1])
@@ -88,7 +87,8 @@ class Multiplication:
             elif PPType[bit4][1] == 2:
                 pp.append(_A << ('l', 1) << ('l', 3 * i))
             elif PPType[bit4][1] == 3:
-                pp.append(((_A << ('l', 1)) + _A) << ('l', 3 * i))
+                _p = ((_A << ('l', 1)) + _A).sign_extend(size=12)
+                pp.append(_p << ('l', 3 * i))
             elif PPType[bit4][1] == 4:
                 pp.append(_A << ('l', 2) << ('l', 3 * i))
             else:
