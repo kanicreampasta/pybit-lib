@@ -173,6 +173,22 @@ class Bits:
         """
         return Bits.from_hex(struct.unpack('>I', struct.pack('>f', value))[0], size=32)
     
+    @staticmethod
+    def from_bin(value: str, size: int=0) -> 'Bits':
+        if value.startswith('0b'):
+            vs = value[2:]
+        else:
+            vs = value
+        bits = []
+        for ch in vs:
+            if ch == '0':
+                bits.append(0)
+            elif ch == '1':
+                bits.append(1)
+            else:
+                raise BitsConstructError("undefined character: " + ch)
+        return Bits(bits)
+
     def subview(self, high: int, low: int) -> 'Bits':
         return Bits(self.bits[len(self)-high:len(self)-low])
 
