@@ -8,7 +8,7 @@ class Multiplication:
         pass
 
     @staticmethod
-    def booth_secondary(A: Bits, B: Bits, t: str = 'bin'):
+    def booth_secondary(A: Bits, B: Bits):
         PPType = {
             '000': "0",
             '001': "+1",
@@ -49,9 +49,8 @@ class Multiplication:
                 pp.append(invA << ('l', 1) << ('l', 2 * i))
             else:
                 raise TypeError("unintended bit3")
-        for i in pp:
-            print(i[0:])
-        ans = Bits([0])
+
+        ans = sum(pp)
 
         return pp.append(ans)
 
@@ -67,6 +66,3 @@ class Multiplication:
     def wallace_tree():
         pass
 
-
-# print(Multiplication.booth_secondary(Bits.from_dec(10, 6), Bits.from_dec(-1, 6)))
-Multiplication.booth_secondary(Bits.from_dec(0b010111, 6), Bits.from_dec(0b001011, 6))
