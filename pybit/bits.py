@@ -174,7 +174,7 @@ class Bits:
         return Bits.from_hex(struct.unpack('>I', struct.pack('>f', value))[0], size=32)
     
     @staticmethod
-    def from_bin(value: str, size: int=0) -> 'Bits':
+    def from_bin(value: str) -> 'Bits':
         if value.startswith('0b'):
             vs = value[2:]
         else:
