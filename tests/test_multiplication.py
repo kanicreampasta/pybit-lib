@@ -44,6 +44,35 @@ def test_booth_tertiary():
     ]
 
 
+def test_CLA():
+    A1 = Bits([1, 0, 1, 1, 1, 1, 0, 1])
+    B1 = Bits([1, 0, 1, 0, 1, 1, 1, 1])
+    assert Multiplication.CLA(A1, B1, 0, size=8) == [
+        Bits([0, 0, 0, 1, 0, 0, 1, 0]),
+        Bits([1, 0, 1, 0, 1, 1, 0, 1]),
+        Bits([1, 0, 1, 1, 1, 1, 1, 1]),
+        Bits([0, 1, 1, 0, 1, 1, 0, 0])
+    ]
+
+    A2 = Bits([0, 1, 0, 1, 1, 0, 1, 0])
+    B2 = Bits([1, 0, 1, 1, 1, 0, 0, 0])
+    assert Multiplication.CLA(A2, B2, 0, size=8) == [
+        Bits([1, 1, 1, 0, 0, 0, 1, 0]),
+        Bits([0, 0, 0, 1, 1, 0, 0, 0]),
+        Bits([1, 1, 1, 1, 1, 0, 0, 0]),
+        Bits([0, 0, 0, 1, 0, 0, 1, 0])
+    ]
+
+    A3 = Bits([0, 1, 1, 1, 1, 0, 1, 0])
+    B3 = Bits([1, 0, 1, 1, 1, 0, 1, 1])
+    assert Multiplication.CLA(A3, B3, 0, size=8) == [
+        Bits([1, 1, 0, 0, 0, 0, 0, 1]),
+        Bits([0, 0, 1, 1, 1, 0, 1, 0]),
+        Bits([1, 1, 1, 1, 1, 0, 1, 0]),
+        Bits([0, 0, 1, 1, 0, 1, 0, 1])
+    ]
+
+
 def test_partial_product():
     pass
 
