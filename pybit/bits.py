@@ -1,6 +1,7 @@
 from typing import Optional, List, Tuple
 import collections
 
+
 class BitsError(Exception):
     def __init__(self, msg: str) -> None:
         super(BitsError, self).__init__(msg)
@@ -17,7 +18,7 @@ class BitsOperationError(BitsError):
 
 
 class Bits:
-    def __init__(self, bits: Optional[List[int]]=None, *, size: Optional[int]=None) -> None:
+    def __init__(self, bits: Optional[List[int]] = None, *, size: Optional[int] = None) -> None:
         if bits:
             self.bits = bits
         else:
@@ -91,20 +92,37 @@ class Bits:
             return Bits([msb] + lst[n + 1:])
         else:
             raise TypeError('shift type must be logical or arithmetic')
-    
+
+    def __add__(self, o: 'Bits') -> 'Bits':
+        if isinstance(o, Bits):
+            # 1桁多めにとる
+            mlen = max(len(self.bits), len(o.bits)) + 1
+
+            A = self.sign_extend(size=mlen)
+            B = o.sign_extend(size=mlen)
+
+            while B != Bits.from_dec(0b0, size=mlen):
+                tmp = (A & B) << ('l', 1)
+                A = A ^ B
+                B = tmp
+
+            # オーバーフローしてたら拡張して返す
+            return A if A[0] == 1 else A.sign_extend(size=mlen-1)
+        raise TypeError('o must be Bits')
+
     def zero_extend(self, *, size: int) -> 'Bits':
         bits_data = [0 for i in range(size)]
         current_size = len(self)
         for i in range(min(size, current_size)):
-            bits_data[size-1-i] = self.bits[current_size-1-i]
+            bits_data[size - 1 - i] = self.bits[current_size - 1 - i]
         return Bits(bits_data)
-    
+
     def sign_extend(self, *, size: int) -> 'Bits':
         msb = self.bits[0]
         bits_data = [msb for i in range(size)]
         current_size = len(self)
         for i in range(min(size, current_size)):
-            bits_data[size-1-i] = self.bits[current_size-1-i]
+            bits_data[size - 1 - i] = self.bits[current_size - 1 - i]
         return Bits(bits_data)
 
     @staticmethod
