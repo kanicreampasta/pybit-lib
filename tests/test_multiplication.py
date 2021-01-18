@@ -73,6 +73,21 @@ def test_CLA():
     ]
 
 
+def test_RCA():
+    A1 = Bits([1, 1, 0, 1, 0, 0, 1, 0])
+    B1 = Bits([1, 1, 1, 0, 0, 1, 0, 1])
+    assert Multiplication.RCA(A1, B1, 1, size=8) == [
+        Bits([1, 0, 1, 1, 1, 0, 0, 0]),
+        Bits([1, 1, 0, 0, 0, 1, 1, 1])
+    ]
+    A2 = Bits([1, 0, 1, 1, 1, 0, 0, 0])
+    B2 = Bits([1, 1, 1, 0, 1, 1, 0, 0])
+    assert Multiplication.RCA(A2, B2, 0, size=8) == [
+        Bits([1, 0, 1, 0, 0, 1, 0, 0]),
+        Bits([1, 1, 1, 1, 1, 0, 0, 0])
+    ]
+
+
 def test_partial_product():
     pass
 
