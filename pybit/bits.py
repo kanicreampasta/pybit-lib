@@ -1,5 +1,6 @@
 from typing import Optional, List, Tuple
 import collections
+import struct
 
 
 class BitsError(Exception):
@@ -162,3 +163,37 @@ class Bits:
         binary = [int(x) for x in list('{0:#0{1}b}'.format(value, size + 2))[2:]]
 
         return Bits(binary)
+
+    @staticmethod
+    def from_float(value: float) -> 'Bits':
+        """
+        Convert 32-bits float to Bits.
+        :param value: (float) float to convert.
+        :return: (Bits) A Bits instance representing the given value.
+        """
+        return Bits.from_hex(struct.unpack('>I', struct.pack('>f', value))[0], size=32)
+    
+    def subview(self, high: int, low: int) -> 'Bits':
+        return Bits(self.bits[len(self)-high:len(self)-low])
+
+    @property
+    def float(self) -> float:
+        return struct.unpack('f', bytes([self.subview(8, 0).uint,
+                                         self.subview(16, 8).uint,
+                                         self.subview(24, 16).uint,
+                                         self.subview(32, 24).uint]))[0]
+
+    @property
+    def int(self) -> int:
+        if self.bits[0] == 0:
+            return self.uint
+        else:
+            return - ((~self) + Bits.from_dec(1, size=len(self))).uint
+
+    @property
+    def uint(self) -> int:
+        r = 0
+        for i, v in enumerate(reversed(self.bits)):
+            if v > 0:
+                r += 2 ** i
+        return r

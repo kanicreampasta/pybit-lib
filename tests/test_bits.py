@@ -209,6 +209,12 @@ class TestToBits:
         assert Bits.from_hex(0xa, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
         assert Bits.from_hex(0x0a, 8) == Bits([0, 0, 0, 0, 1, 0, 1, 0])
 
+    def test_from_float(self):
+        assert Bits.from_float(1.5) == Bits.from_hex(0x3fc00000, 32)
+        assert Bits.from_float(-1.5) == Bits.from_hex(0xbfc00000, 32)
+        assert Bits.from_float(0.0) == Bits(size=32)
+        assert Bits.from_float(1.2) == Bits.from_hex(0x3f99999a, 32)
+
 
 class TestAdd:
     def test_no_carry(self):
@@ -246,3 +252,43 @@ class TestAdd:
         assert Bits([0, 0]) + Bits([0, 0, 0]) + Bits([0, 0]) == Bits([0, 0, 0])
         assert Bits([1, 0]) + Bits([1, 0, 0]) + Bits([0, 1, 1]) == Bits([1, 0, 0, 1])
         assert Bits([1, 1, 1, 1]) + Bits([1, 1, 1, 1]) + Bits([1, 1, 1, 1]) == Bits([1, 0, 1, 1, 0, 1])
+
+
+class TestBitsValue:
+    def test_int_positive(self):
+        assert Bits.from_dec(0).int == 0
+        assert Bits.from_dec(0,1).int == 0
+        assert Bits.from_dec(10, 10).int == 10
+        assert Bits.from_dec(100, 32).int == 100
+
+    def test_uint_positive(self):
+        assert Bits.from_dec(0).uint == 0
+        assert Bits.from_dec(0,1).uint == 0
+        assert Bits.from_dec(1,1).uint == 1
+        assert Bits.from_dec(10).uint == 10
+        assert Bits.from_dec(10, 10).uint == 10
+        assert Bits.from_dec(100).uint == 100
+
+    def test_int_negative(self):
+        assert Bits.from_dec(-1).int == -1
+        assert Bits.from_dec(-1, 1).int == -1
+        assert Bits.from_dec(-1, 5).int == -1
+        assert Bits.from_dec(-10).int == -10
+        assert Bits.from_dec(-10, 5).int == -10
+        assert Bits.from_dec(-10, 10).int == -10
+        assert Bits.from_dec(-100, 8).int == -100
+        assert Bits.from_dec(-255).int == -255
+
+    def test_float(self):
+        def close(a, b):
+            assert abs(a-b) < 0.0001
+        close(Bits.from_float(1.5).float, 1.5)
+        close(Bits.from_float(-1.5).float, -1.5)
+        close(Bits.from_float(0.0).float, 0.0)
+        close(Bits.from_float(1.2).float, 1.2)
+
+    def test_zeros(self):
+        bits = Bits(size=32)
+        assert bits.int == 0
+        assert bits.uint == 0
+        assert bits.float == 0.0
