@@ -120,8 +120,19 @@ def test_RCA():
 
 
 def test_partial_product():
-    pass
+    A1 = Bits([0, 1, 1, 0, 1, 1])
+    B1 = Bits([0, 1, 1, 1, 0, 1])
+    assert Multiplication.partial_product(A1, B1, size=6) == [
+        Bits([0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1]),
+        Bits([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+        Bits([0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0]),
+        Bits([0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0]),
+        Bits([0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0]),
+        Bits([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+    ]
 
 
 def test_wallace_tree():
-    pass
+    A1 = Bits([0, 1, 1, 0, 1, 1])
+    B1 = Bits([0, 1, 1, 1, 0, 1])
+    assert Multiplication.wallace_tree(A1, B1, size=6) == Bits([0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1])
