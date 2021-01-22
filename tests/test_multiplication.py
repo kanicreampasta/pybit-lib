@@ -130,9 +130,22 @@ def test_partial_product():
         Bits([0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0]),
         Bits([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
     ]
+    A2 = Bits([1, 0, 1, 1, 1, 1])
+    B2 = Bits([0, 1, 1, 0, 1, 0])
+    assert Multiplication.partial_product(A2, B2, size=6) == [
+        Bits([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+        Bits([1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0]),
+        Bits([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+        Bits([1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0]),
+        Bits([1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0]),
+        Bits([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+    ]
 
 
 def test_wallace_tree():
     A1 = Bits([0, 1, 1, 0, 1, 1])
     B1 = Bits([0, 1, 1, 1, 0, 1])
     assert Multiplication.wallace_tree(A1, B1, size=6) == Bits([0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1])
+    A2 = Bits([1, 0, 1, 1, 1, 1])
+    B2 = Bits([0, 1, 1, 0, 1, 0])
+    assert Multiplication.wallace_tree(A2, B2, size=6) == Bits([1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0])
