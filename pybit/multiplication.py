@@ -157,8 +157,17 @@ class Multiplication:
         return [S, CO]
 
     @staticmethod
-    def partial_product():
-        pass
+    def partial_product(A: Bits, B: Bits, size: int):
+        Multiplication._check_len(A, B, size=size)
+        pp = []
+
+        for i in range(size):
+            _b = B[size - (i + 1)]
+            _p = A if _b == 1 else Bits.from_dec(0, 6)
+            _p = _p.sign_extend(size=size * 2) << ('l', i)
+            pp.append(_p)
+
+        return pp
 
     @staticmethod
     def wallace_tree():
