@@ -23,7 +23,7 @@ class Multiplication:
         return (Bits.from_dec(0, size) for _ in range(q))
 
     @staticmethod
-    def booth_secondary(A: Bits, B: Bits):
+    def booth_secondary(A: Bits, B: Bits, Apositive: bool = False):
         PPType = {
             '000': ('', 0), '100': ('-', 2),
             '001': ('+', 1), '101': ('-', 1),
@@ -33,6 +33,7 @@ class Multiplication:
 
         Multiplication._check_len(A, B, size=6)
         A, B = Multiplication._extend(A, B)
+        if Apositive: A = A.zero_extend(size=12)
         pp = []
 
         for i in range(3):
