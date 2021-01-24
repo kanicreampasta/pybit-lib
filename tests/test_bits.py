@@ -318,3 +318,10 @@ class TestBitsValue:
         assert Bits([0, 0, 0, 0, 0, 0, 0, 0]).hex == '0x00'
         assert Bits.from_dec(31, size=32).hex == '0x0000001f'
         assert Bits.from_dec(234).hex == '0xea'
+
+class TestFloat:
+    def test_float12(self):
+        assert Bits.from_float12(-0.5) == Bits([1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0])
+        assert Bits.from_float12(1.5) == Bits([0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0])
+        assert Bits.from_float12(10.5) == Bits([0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0])
+        assert Bits.from_float12(5.0) == Bits([0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0])
