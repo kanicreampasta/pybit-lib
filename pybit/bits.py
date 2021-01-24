@@ -185,7 +185,14 @@ class Bits:
             return Bits.from_dec(0,12)
         a=abs(value)
         exponents=math.floor(math.log2(a))
-        mantisa=math.floor(a/(2**exponents)*2**6)
+        mantisa=math.floor(a/(2**exponents)*2**7)
+        if mantisa%2 !=0:
+            mantisa=mantisa//2
+            if mantisa%2!=0:
+                mantisa+=1
+        else:
+            mantisa=mantisa//2
+        
         sign=0 if value>0 else 1
         #print(sign)
         #print(exponents+31)
