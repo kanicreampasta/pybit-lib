@@ -213,3 +213,20 @@ class Bits:
             if v > 0:
                 r += 2 ** i
         return r
+
+    @property
+    def hex(self) -> str:
+        hexch = ['0','1','2','3','4','5','6','7','8',
+                 '9','a','b','c','d','e','f']
+        size = len(self)
+        hexstr = []
+        t = 0
+        for k, i in enumerate(reversed(range(size))):
+            if self.bits[i] == 1:
+                t += 2 ** (k%4)
+            if (k+1) % 4 == 0:
+                hexstr.append(hexch[t])
+                t = 0
+        if size % 4 != 0:
+            hexstr.append(hexch[t])
+        return '0x' + ''.join(reversed(hexstr))
