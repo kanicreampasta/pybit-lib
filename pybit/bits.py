@@ -187,14 +187,16 @@ class Bits:
         exponents=math.floor(math.log2(a))
         mantisa=math.floor(a/(2**exponents)*2**6)
         sign=0 if value>0 else 1
-        print(sign)
-        print(exponents+31)
-        print("{0:b}".format(mantisa))
-        print("{0:b}".format(mantisa-2**6))
-        
+        #print(sign)
+        #print(exponents+31)
         # shitcode
-        print("{0:b}".format(sign)+"{0:b}".format(exponents)+"{0:b}".format(mantisa-2**6))
-        return Bits.from_bin("{0:b}".format(sign)+"{0:b}".format(exponents)+"{0:b}".format(mantisa-2**6))
+        #print("{0:b}".format(mantisa)[1:6])
+        exponents+=31
+        string="{0:b}".format(sign).zfill(1)
+        string+="{0:b}".format(exponents).zfill(6)
+        string+="{0:b}".format(mantisa)[1:6]
+        #print(string)
+        return Bits.from_bin(string)
     
     @staticmethod
     def from_bin(value: str) -> 'Bits':
