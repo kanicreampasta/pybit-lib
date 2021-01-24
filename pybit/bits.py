@@ -1,6 +1,7 @@
 from typing import Optional, List, Tuple
 import collections
 import struct
+import math
 
 
 class BitsError(Exception):
@@ -172,6 +173,37 @@ class Bits:
         :return: (Bits) A Bits instance representing the given value.
         """
         return Bits.from_hex(struct.unpack('>I', struct.pack('>f', value))[0], size=32)
+    
+    @staticmethod
+    def from_float12(value:float)->'Bits':
+        """
+        Convert 12-bits float to Bits.
+        :param value: (float) float value to convert.
+        :return: (Bits) A Bits instance representing the given value. 
+        """
+        if value==0:
+            return Bits.from_dec(0,12)
+        a=abs(value)
+        exponents=math.floor(math.log2(a))
+        mantisa=math.floor(a/(2**exponents)*2**7)
+        if mantisa%2 !=0:
+            mantisa=mantisa//2
+            if mantisa%2!=0:
+                mantisa+=1
+        else:
+            mantisa=mantisa//2
+        
+        sign=0 if value>0 else 1
+        #print(sign)
+        #print(exponents+31)
+        # shitcode
+        #print("{0:b}".format(mantisa)[1:6])
+        exponents+=31
+        string="{0:b}".format(sign).zfill(1)
+        string+="{0:b}".format(exponents).zfill(6)
+        string+="{0:b}".format(mantisa)[1:6]
+        #print(string)
+        return Bits.from_bin(string)
     
     @staticmethod
     def from_bin(value: str) -> 'Bits':

@@ -78,7 +78,6 @@ class Multiplication:
 
         for i in range(2):
             bit4 = ''.join(map(str, B[12 - 4 - 3 * i:12 - 3 * i]))
-            print(bit4)
 
             if PPType[bit4][0] == '-':
                 _A = A.__invert__() + Bits([1])
