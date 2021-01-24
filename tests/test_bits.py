@@ -308,3 +308,13 @@ class TestBitsValue:
         assert bits.int == 0
         assert bits.uint == 0
         assert bits.float == 0.0
+
+    def test_hexstr(self):
+        assert Bits(size=4).hex == '0x0'
+        assert Bits([0, 0, 0, 1]).hex == '0x1'
+        assert Bits([1, 0, 1, 0]).hex == '0xa'
+        assert Bits([1, 0, 0, 0, 0]).hex == '0x10'
+        assert Bits([0, 1, 0, 0, 0, 0, 0, 0, 0, 0]).hex == '0x100'
+        assert Bits([0, 0, 0, 0, 0, 0, 0, 0]).hex == '0x00'
+        assert Bits.from_dec(31, size=32).hex == '0x0000001f'
+        assert Bits.from_dec(234).hex == '0xea'
