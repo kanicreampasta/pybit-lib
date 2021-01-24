@@ -3,7 +3,10 @@ from pybit.multiplication import Multiplication
 
 # Question 1
 print("========Q1========")
-
+print("(a): ", Bits.from_float(-0.5).hex)
+print("(b): ", Bits.from_float(1.5).hex)
+print("(c): ", Bits.from_float(10.5).hex)
+print("(d): ", Bits.from_float(5).hex)
 
 # Question2
 print("========Q2========")
