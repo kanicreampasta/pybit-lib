@@ -112,6 +112,14 @@ class Bits:
             return A if A[0] == 1 else A.sign_extend(size=mlen-1)
         raise TypeError('o must be Bits')
 
+    def __neg__(self) -> 'Bits':
+        return (~self+Bits.from_hex(1)).zero_extend(size=len(self))
+
+    def __sub__(self,o:'Bits') -> 'Bits':
+        if isinstance(o, Bits):
+            return (self + (-o)).zero_extend(size=len(self))
+        raise TypeError('o must be Bits')
+
     def zero_extend(self, *, size: int) -> 'Bits':
         bits_data = [0 for i in range(size)]
         current_size = len(self)
