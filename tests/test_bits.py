@@ -231,6 +231,26 @@ class TestToBits:
         assert Bits.from_float(0.0) == Bits(size=32)
         assert Bits.from_float(1.2) == Bits.from_hex(0x3f99999a, 32)
 
+class TestNeg:
+    def test_simple(self):
+        assert -Bits.from_dec(1,8)==Bits.from_dec(-1,8)
+        assert -Bits.from_dec(0,8)==Bits.from_dec(-0,8)
+        assert -Bits.from_dec(7,8)==Bits.from_dec(-7,8)
+        assert -Bits.from_dec(32,8)==Bits.from_dec(-32,8)
+        assert -Bits.from_dec(127,8)==Bits.from_dec(-127,8)
+
+class TestSub:
+    def test_simple(self):
+        assert Bits.from_dec(2,8)-Bits.from_dec(1,8)==Bits.from_dec(2-1,8)
+        assert Bits.from_dec(127,8)-Bits.from_dec(3,8)==Bits.from_dec(127-3,8)
+        assert Bits.from_dec(3,8)-Bits.from_dec(127,8)==Bits.from_dec(3-127,8)
+        assert Bits.from_dec(1,8)-Bits.from_dec(6,8)==Bits.from_dec(1-6,8)
+        assert Bits.from_dec(12,8)-Bits.from_dec(55,8)==Bits.from_dec(12-55,8)
+        assert Bits.from_dec(0,8)-Bits.from_dec(55,8)==Bits.from_dec(0-55,8)
+    def test_multiple_subtraction(self):
+        assert Bits.from_dec(2,8)-Bits.from_dec(1,8)-Bits.from_dec(32,8)==Bits.from_dec(2-1-32,8)
+        assert Bits.from_dec(32,8)-Bits.from_dec(15,8)-Bits.from_dec(66,8)==Bits.from_dec(32-15-66,8)
+
 
 class TestAdd:
     def test_no_carry(self):
