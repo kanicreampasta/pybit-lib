@@ -117,7 +117,7 @@ class Bits:
 
     def __sub__(self,o:'Bits') -> 'Bits':
         if isinstance(o, Bits):
-            return (self + (-o)).zero_extend(size=len(self))
+            return (self + (-o)).zero_extend(size=max(len(self),len(o)))
         raise TypeError('o must be Bits')
 
     def zero_extend(self, *, size: int) -> 'Bits':
