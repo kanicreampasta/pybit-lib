@@ -3,3 +3,6 @@
 *.DS_Store
 booth.py
 calc.py
+/pybit_lib.egg-info
+/build
+/dist
